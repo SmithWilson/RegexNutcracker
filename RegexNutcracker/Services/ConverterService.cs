@@ -32,7 +32,7 @@ namespace RegexNutcracker.Services
 				pattern = value;
 			}
 
-			// . - + №
+			// . - + № , / *
 			var result = pattern
 				.TrimStart()
 				.Trim()
