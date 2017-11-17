@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,8 @@ namespace RegexNutcracker.Services
 		{
 			return Task.Run(() =>
 			{
+				var Observer = new Stopwatch();
+				Observer.Start();
 				using (var sr = new StreamReader(path + "/" + fileName, Encoding.Default))
 				{
 					if (!sr.BaseStream.CanRead)
@@ -32,6 +35,9 @@ namespace RegexNutcracker.Services
 					{
 						input.Add(sr.ReadLine());
 					}
+
+					Observer.Stop();
+					Console.WriteLine($"Считывание из файла {fileName} : {Observer.ElapsedTicks} ms");
 
 					return input;
 				}
@@ -49,7 +55,9 @@ namespace RegexNutcracker.Services
 		{
 			return Task.Run(() =>
 			{
-				using (var sw = new StreamWriter(path + "/" + fileName, false, Encoding.UTF8))
+				var Observer = new Stopwatch();
+				Observer.Start();
+				using (var sw = new StreamWriter(path + "/" + fileName, false, Encoding.Default))
 				{
 					if (!sw.BaseStream.CanWrite)
 					{
@@ -62,6 +70,24 @@ namespace RegexNutcracker.Services
 						sw.WriteLine(line);
 					}
 				}
+				Observer.Stop();
+				Console.WriteLine($"Запись в файл {fileName} : {Observer.ElapsedTicks} ms");
+			});
+		}
+
+		public static Task DeleteFromFile(string path, string fileName)
+		{
+			return Task.Run(() =>
+			{
+
+				var Observer = new Stopwatch();
+				Observer.Start();
+				using (var sw = new StreamWriter(new FileStream(path + "/" + fileName, FileMode.Create, FileAccess.Write)))
+				{
+
+				}
+				Observer.Stop();
+				Console.WriteLine($"Удаление из файла {fileName} : {Observer.ElapsedMilliseconds} ms");
 			});
 		}
 	}
