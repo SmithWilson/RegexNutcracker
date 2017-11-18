@@ -9,6 +9,13 @@ namespace RegexNutcracker.Services
 {
 	public static class ConverterService
 	{
+		/// <summary>
+		/// Преобразует входные данные в регулярное выражение.
+		/// Распознает : . - + № , / * " пробел
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="model"></param>
+		/// <returns></returns>
 		public static string StringToRegex(this string value, string model)
 		{
 			string pattern;
@@ -23,16 +30,19 @@ namespace RegexNutcracker.Services
 				.Trim()
 				.TrimEnd();
 
-			if (value != model)
+			if (value != model && !String.IsNullOrWhiteSpace(value) && !String.IsNullOrWhiteSpace(model))
 			{
 				pattern = $"({value})|({model})";
+			}
+			else if (String.IsNullOrWhiteSpace(value))
+			{
+				pattern = model;
 			}
 			else
 			{
 				pattern = value;
 			}
 
-			// . - + № , / *
 			var result = pattern
 				.TrimStart()
 				.Trim()
