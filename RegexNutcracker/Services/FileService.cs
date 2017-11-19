@@ -87,6 +87,7 @@ namespace RegexNutcracker.Services
 
 				}
 				Observer.Stop();
+
 				Console.WriteLine($"Удаление из файла {fileName} : {Observer.ElapsedMilliseconds} ms");
 			});
 		}
