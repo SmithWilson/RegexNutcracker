@@ -11,7 +11,7 @@ namespace RegexNutcracker.Services
 	{
 		/// <summary>
 		/// Преобразует входные данные в регулярное выражение.
-		/// Распознает : . - + № , / * " пробел
+		/// Распознает . - + № , / * " пробел ( )
 		/// </summary>
 		/// <param name="value"></param>
 		/// <param name="model"></param>
@@ -32,15 +32,15 @@ namespace RegexNutcracker.Services
 
 			if (value != model && !String.IsNullOrWhiteSpace(value) && !String.IsNullOrWhiteSpace(model))
 			{
-				pattern = $"({value})|({model})";
+				pattern = $"({value.ParseBracket()})|({model.ParseBracket()})";
 			}
 			else if (String.IsNullOrWhiteSpace(value))
 			{
-				pattern = model;
+				pattern = model.ParseBracket();
 			}
 			else
 			{
-				pattern = value;
+				pattern = value.ParseBracket();
 			}
 
 			var result = pattern
@@ -49,12 +49,11 @@ namespace RegexNutcracker.Services
 				.TrimEnd()
 				.Insert(0, "#")
 				.Insert(pattern.Length + 1, "#")
-				.Replace(")", @"(#|\))?")
-				.Replace("(", @"(#|\()?")
-				.Replace("(#|\\()?#|\\))?", @"(#|\))?")
 				.Replace("-", @"(#|\-)?")
 				.Replace("/", @"(#|\/|\-)?")
 				.Replace(" ", @"(#|\-)?")
+				.Replace("_", @"(#|\_)?")
+				.Replace("&", @"(#|\&)?")
 				.Replace(".", @"(#|\.|\-)?")
 				.Replace(",", @"(#|\,)?")
 				.Replace("+", @"(#|\+|\-)?")
@@ -63,6 +62,14 @@ namespace RegexNutcracker.Services
 				.Replace("*", @"(#|\*)?");
 			
 			return result;
+		}
+
+		private static string ParseBracket(this string value)
+		{
+			return value
+				.Replace(")", @"(#|\))?")
+				.Replace("(", @"(#|\()?")
+				.Replace("(#|\\()?#|\\))?", @"(#|\))?");
 		}
 	}
 }

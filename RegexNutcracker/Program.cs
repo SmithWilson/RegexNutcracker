@@ -61,6 +61,8 @@ namespace RegexNutcracker
 
 			await FileService.WriteToFile(_path, _outputFile, Encoded);
 
+
+			Console.WriteLine("\nВсе готово. Нажмите любую клавишу, чтобы выйти.");
 			Console.ReadKey();
 		}
 	}
