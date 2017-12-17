@@ -40,14 +40,18 @@ namespace RegexNutcracker.Services
 			{
 				pattern = $"({value})|({model})";
 			}
-			else if (String.IsNullOrWhiteSpace(value))
+			else 
 			{
-				pattern = model;
-			}
-			else
-			{
-				pattern = value;
-			}
+                if (String.IsNullOrWhiteSpace(value))
+                {
+                    pattern = model;
+                }
+                else
+                {
+                    pattern = value;
+                }
+            }
+			
 
 
             #region Main
@@ -95,6 +99,7 @@ namespace RegexNutcracker.Services
             }
 
             value = value
+                .Replace("|", @"\|?")
                 .Replace(")", @"(#|\))?")
                 .Replace("(", @"(#|\()?")
                 .Replace("(#|\\()?#|\\))?", @"(#|\))?");
