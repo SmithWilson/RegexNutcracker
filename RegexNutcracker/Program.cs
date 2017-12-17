@@ -52,8 +52,18 @@ namespace RegexNutcracker
 
 			for (var i = 0; i < count; i++)
 			{
-				Encoded.Add(unEncoded[i].StringToRegex(models[i]));
-				Debugger.Log(1, "line", $"{i}\n");
+                try
+                {
+                    Encoded.Add(unEncoded[i].StringToRegex(models[i]));
+                    Debugger.Log(1, "line", $"{i}\n");
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine(
+                        "\n* * * * * * * * * * * * * * * * * \n" +
+                        "Разное количество входных данных." +
+                        "\n* * * * * * * * * * * * * * * * *\n");
+                }
 			}
 
 			Observer.Stop();
