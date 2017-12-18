@@ -13,14 +13,13 @@ namespace RegexNutcracker
 	{
 		public static async Task Main(string[] args)
 		{
-			
-
 			#region Fields
 			var _path = Directory.GetCurrentDirectory();
 			var _modelFile = "model.txt";
 			var _unEncodedFile = "unEncoded.txt";
 			var _outputFile = "output.txt";
 			#endregion
+
 
 			await FileService.DeleteFromFile(_path, _outputFile);
 
@@ -50,21 +49,23 @@ namespace RegexNutcracker
 
 			var Encoded = new List<string>(count);
 
-			for (var i = 0; i < count; i++)
-			{
-                try
+			
+            try
+            {
+                for (var i = 0; i < count; i++)
                 {
-                    Encoded.Add(unEncoded[i].StringToRegex(models[i]));
+                    Encoded.Add(models[i].StringToRegex(unEncoded[i]));
                     Debugger.Log(1, "line", $"{i}\n");
                 }
-                catch (Exception)
-                {
-                    Console.WriteLine(
-                        "\n* * * * * * * * * * * * * * * * * \n" +
-                        "Разное количество входных данных." +
-                        "\n* * * * * * * * * * * * * * * * *\n");
-                }
-			}
+            }
+            catch (Exception)
+            {
+                Console.WriteLine(
+                    "\n* * * * * * * * * * * * * * * * * \n" +
+                    "Разное количество входных данных." +
+                    "\n* * * * * * * * * * * * * * * * *\n");
+            }
+			
 
 			Observer.Stop();
 			Console.WriteLine($"Создание регулярных выражений : {Observer.ElapsedMilliseconds} ms");

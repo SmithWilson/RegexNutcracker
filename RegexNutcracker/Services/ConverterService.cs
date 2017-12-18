@@ -9,6 +9,8 @@ namespace RegexNutcracker.Services
 {
 	public static class ConverterService
 	{
+        private static List<string> _charCase = new List<string> { ".", "-", "+", "№", ",", "/", "\"", "*", "(", ")", "®", " " };
+
         /// <summary>
         /// Преобразует входные данные в регулярное выражение.
         /// Распознает . - + № , / * " пробел ( ) ®
@@ -53,7 +55,6 @@ namespace RegexNutcracker.Services
             }
 			
 
-
             #region Main
             if (String.IsNullOrWhiteSpace(pattern) || pattern == "()|()")
             {
@@ -87,9 +88,8 @@ namespace RegexNutcracker.Services
         #region Non-public Methods
         private static string ParseBracket(this string value)
         {
-            var charCase = new List<string> { ".", "-", "+", "№", ",", "/", "\"", "*", "(", ")", "®" };
             var flag = false;
-            foreach (var item in charCase)
+            foreach (var item in _charCase)
             {
                 if (value.Contains(item))
                 {
