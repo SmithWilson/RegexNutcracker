@@ -84,7 +84,56 @@ namespace RegexNutcracker.Services
             return result;
 		}
 
+        public static string StringToRegex(this string value)
+        {
+            #region Fields
+            string pattern;
+            #endregion
 
+            if (value == "!@#")
+            {
+                return "Выход...";
+            }
+
+            value = value
+                .TrimStart()
+                .Trim()
+                .TrimEnd()
+                .ParseBracket();
+            
+            if (!String.IsNullOrWhiteSpace(value))
+            {
+                pattern = $"{value}";
+            }
+            else
+            {
+                return "Входная строка пустая или она содержит только пробелы между словами.";
+            }
+
+
+            #region Main
+            var result = pattern
+                .TrimStart()
+                .Trim()
+                .TrimEnd()
+                .Insert(0, "#")
+                .Insert(pattern.Length + 1, "#")
+                .Replace("-", @"(#|\-)?")
+                .Replace("/", @"(#|\/|\-)?")
+                .Replace(" ", @"(#|\-)?")
+                .Replace("_", @"(#|\_)?")
+                .Replace("&", @"(#|\&)?")
+                .Replace(".", @"(#|\.|\-)?")
+                .Replace(",", @"(#|\,)?")
+                .Replace("+", @"(#|\+|\-)?")
+                .Replace("№", @"(#|\№)?")
+                .Replace("\"", @"(#|\"")?")
+                .Replace("*", @"(#|\*)?")
+                .Replace("®", @"(#|\®)?");
+            #endregion
+
+            return result;
+        }
         #region Non-public Methods
         private static string ParseBracket(this string value)
         {
@@ -101,7 +150,7 @@ namespace RegexNutcracker.Services
             value = value
                 .Replace("|", @"\|?")
                 .Replace(")", @"(#|\))?")
-                .Replace("(", @"(#|\()?")
+                .Replace("(", @"#?(#|\()?")
                 .Replace("(#|\\()?#|\\))?", @"(#|\))?");
 
             return flag ? value : "";
