@@ -6,12 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace RegexNutcracker
 {
 	public class Program
 	{
-		public static async Task Main(string[] args)
+        [STAThread]
+        public static void Main(string[] args)
 		{
             #region Fields
             var flag = false;
@@ -51,8 +53,9 @@ namespace RegexNutcracker
                 {
                     Console.Write("\nДля выхода введите !@# для получения регулярного выражения введите строку : ");
                     value = Console.ReadLine();
-                    Console.WriteLine($"Регулярное выражение : {value.StringToRegex()}");
-                    
+                    value = value.StringToRegex();
+                    Console.WriteLine($"Регулярное выражение : {value}\nПомещено в буфер обмена.");
+                    Clipboard.SetText(value.ToString());
                 }
             }
 
