@@ -92,7 +92,8 @@ namespace RegexNutcracker.Services
 
             if (value == "!@#")
             {
-                return "Выход...";
+                Console.WriteLine("Выход...");
+                Environment.Exit(0);
             }
 
             value = value
@@ -109,7 +110,6 @@ namespace RegexNutcracker.Services
             {
                 return "Входная строка пустая или это одно слово.";
             }
-
 
             #region Main
             var result = pattern
