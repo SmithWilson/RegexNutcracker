@@ -9,11 +9,11 @@ namespace RegexNutcracker.Services
 {
 	public static class ConverterService
 	{
-        private static List<string> _charCase = new List<string> { ".", "-", "+", "№", ",", "/", "\"", "*", "(", ")", "®", " " };
+        private static List<string> _charCase = new List<string> { ".", "-", "+", "№", ",", "/", "\"", "*", "(", ")", "®", "'", "`", "&" };
 
         /// <summary>
         /// Преобразует входные данные в регулярное выражение.
-        /// Распознает . - + № , / * " пробел ( ) ®
+        /// Распознает . - + № , / * " пробел ( ) ® ` '
         /// </summary>
         /// <param name="value"></param>
         /// <param name="model"></param>
@@ -21,14 +21,14 @@ namespace RegexNutcracker.Services
         public static string StringToRegex(this string value, string model)
         {
             #region Fields
-            string pattern; 
+            string pattern;
             #endregion
 
 
             value = value
-				.TrimStart()
-				.Trim()
-				.TrimEnd()
+                .TrimStart()
+                .Trim()
+                .TrimEnd()
                 .ParseBracket();
 
 			model = model
@@ -36,6 +36,12 @@ namespace RegexNutcracker.Services
 				.Trim()
 				.TrimEnd()
                 .ParseBracket();
+
+            if (value.ToLower() != model.ToLower() && string.IsNullOrWhiteSpace(model))
+            {
+                value = value.Check();
+                model = model.Check();
+            }
 
 
 			if (!String.IsNullOrWhiteSpace(value) && !String.IsNullOrWhiteSpace(model) && value.ToLower().Trim() != model.ToLower().Trim())
@@ -78,7 +84,10 @@ namespace RegexNutcracker.Services
                 .Replace("№", @"(#|\№)?")
                 .Replace("\"", @"(#|\"")?")
                 .Replace("*", @"(#|\*)?")
-                .Replace("®", @"(#|\®)?"); 
+                .Replace("®", @"(#|\®)?")
+                .Replace("'", @"(#|\'|\-)?")
+                .Replace("`", @"(#|\`|\-)?")
+                .Replace("’", @"(#|\’|\-)?"); 
             #endregion
 
             return result;
@@ -129,13 +138,27 @@ namespace RegexNutcracker.Services
                 .Replace("№", @"(#|\№)?")
                 .Replace("\"", @"(#|\"")?")
                 .Replace("*", @"(#|\*)?")
-                .Replace("®", @"(#|\®)?");
+                .Replace("®", @"(#|\®)?")
+                .Replace("'", @"(#|\'|\-)?")
+                .Replace("`", @"(#|\`|\-)")
+                .Replace("’", @"(#|\’|\-)?");
             #endregion
 
             return result;
         }
         #region Non-public Methods
         private static string ParseBracket(this string value)
+        {
+            value = value
+                .Replace("|", @"\|?")
+                .Replace(")", @"(#|\))?")
+                .Replace("(", @"#?(#|\()?")
+                .Replace("(#|\\()?#|\\))?", @"(#|\))?");
+
+            return value;
+        } 
+
+        private static string Check(this string value)
         {
             var flag = false;
             foreach (var item in _charCase)
@@ -147,14 +170,8 @@ namespace RegexNutcracker.Services
                 }
             }
 
-            value = value
-                .Replace("|", @"\|?")
-                .Replace(")", @"(#|\))?")
-                .Replace("(", @"#?(#|\()?")
-                .Replace("(#|\\()?#|\\))?", @"(#|\))?");
-
             return flag ? value : "";
-        } 
+        }
         #endregion
     }
 }
