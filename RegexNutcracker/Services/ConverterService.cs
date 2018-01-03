@@ -9,7 +9,7 @@ namespace RegexNutcracker.Services
 {
 	public static class ConverterService
 	{
-        private static List<string> _charCase = new List<string> { ".", "-", "+", "№", ",", "/", "\"", "*", "(", ")", "®", "'", "`", "&" };
+        private static List<string> _charCase = new List<string> { ".", "-", "+", "№", ",", "/", "\"", "*", "(", ")", "®", "'", "`", "&", "’" };
 
         /// <summary>
         /// Преобразует входные данные в регулярное выражение.
