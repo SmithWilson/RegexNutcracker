@@ -16,7 +16,7 @@ namespace RegexNutcracker
         public static void Main(string[] args)
 		{
             #region Fields
-            var flag = false;
+            var flag = WorkMode.Single;
 			var _path = Directory.GetCurrentDirectory();
 			var _modelFile = "model.txt";
 			var _unEncodedFile = "unEncoded.txt";
@@ -25,32 +25,39 @@ namespace RegexNutcracker
 
             flag = Modes(flag);
 
-            if (flag)
+            if (flag == WorkMode.Single)
             {
                 Single();
             }
-            else
+            else if (flag == WorkMode.Multy)
             {
                 Multy(_path, _outputFile, _modelFile, _unEncodedFile);
+            }
+            else
+            {
+                ManyDictionaries();
             }
 
             Console.ReadKey();
 		}
 
-        public static bool Modes(bool flag)
+        public static WorkMode Modes(WorkMode flag)
         {
-            Console.Write("Выбор режима F1 - одиночный, F2 - множественная выборка : ");
+            Console.Write("Выбор режима F1 - одиночный,\n F2 - множественная выборка,\n F3 - работа с множеством словарей : ");
             ConsoleKeyInfo consoleKey = Console.ReadKey();
             switch (consoleKey.Key)
             {
                 case ConsoleKey.F1:
                     Console.WriteLine("Приложение переведено в одиночный режим");
-                    return true;
+                    return WorkMode.Single;
                 case ConsoleKey.F2:
                     Console.WriteLine("Приложение переведено в режим множественной выборки.");
-                    return false;
+                    return WorkMode.Multy;
+                case ConsoleKey.F3:
+                    Console.WriteLine("Приложение переведено в режим создание из нескольких словарей.");
+                    return WorkMode.ManyDictionaries;
                 default:
-                    return false;
+                    return WorkMode.Single;
             }
         }
 
@@ -61,9 +68,62 @@ namespace RegexNutcracker
             {
                 Console.Write("\nДля выхода введите !@# для получения регулярного выражения введите строку : ");
                 value = Console.ReadLine();
+
                 value = value.StringToRegex();
+
+                Clipboard.Clear();
+
                 Console.WriteLine($"Регулярное выражение : {value}\nПомещено в буфер обмена.");
                 Clipboard.SetText(value.ToString());
+            }
+        }
+
+        private static void ManyDictionaries()
+        {
+            var value = "";
+            while (1 > 0)
+            {
+                Console.Write("\nДля выхода введите !@# для получения регулярного выражения введите строку : ");
+                value = Console.ReadLine();
+                var str = value.Split('|');
+                value = string.Empty;
+                foreach (var item in str)
+                {
+                    value += $"({item.TrimStart().Trim().TrimEnd()})";
+                    if (!(str.Last() == item))
+                    {
+                        value += "|";
+                    }
+                }
+
+                var result = value
+               .TrimStart()
+               .Trim()
+               .TrimEnd()
+               .Insert(0, "#")
+               .Insert(value.Length + 1, "#")
+               .Replace("-", @"(#|\-)?")
+               .Replace("!", @"(#|\!)?")
+               .Replace(":", @"(#|\:)?")
+               .Replace("/", @"(#|\/|\-)?")
+               .Replace(" ", @"(#|\-)?")
+               .Replace("_", @"(#|\_)?")
+               .Replace("&", @"(#|\&)?")
+               .Replace(".", @"(#|\.|\-)?")
+               .Replace(",", @"(#|\,)?")
+               .Replace("+", @"(#|\+|\-)?")
+               .Replace("№", @"(#|\№)?")
+               .Replace("\"", @"(#|\"")?")
+               .Replace("*", @"(#|\*)?")
+               .Replace("®", @"(#|\®)?")
+               .Replace("'", @"(#|\'|\-)?")
+               .Replace("`", @"(#|\`|\-)")
+               .Replace("’", @"(#|\’|\-)?");
+
+                Clipboard.Clear();
+
+                Console.WriteLine($"Регулярное выражение : {result}\nПомещено в буфер обмена.");
+                Clipboard.SetText(result.ToString());
             }
         }
 
@@ -121,6 +181,9 @@ namespace RegexNutcracker
             await FileService.WriteToFile(_path, _outputFile, Encoded);
 
             Console.WriteLine("\nВсе готово. Нажмите любую клавишу, чтобы выйти.");
+
+            Process.Start("notepad.exe", $@"{_path}\{_outputFile}");
+
             Console.ReadKey();
         }
     }

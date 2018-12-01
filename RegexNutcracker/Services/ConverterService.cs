@@ -74,6 +74,8 @@ namespace RegexNutcracker.Services
                 .Insert(0, "#")
                 .Insert(pattern.Length + 1, "#")
                 .Replace("-", @"(#|\-)?")
+                .Replace("!", @"(#|\!)?")
+                .Replace(":", @"(#|\:)?")
                 .Replace("/", @"(#|\/|\-)?")
                 .Replace(" ", @"(#|\-)?")
                 .Replace("_", @"(#|\_)?")
@@ -128,6 +130,8 @@ namespace RegexNutcracker.Services
                 .Insert(0, "#")
                 .Insert(pattern.Length + 1, "#")
                 .Replace("-", @"(#|\-)?")
+                .Replace("!", @"(#|\!)?")
+                .Replace(":", @"(#|\:)?")
                 .Replace("/", @"(#|\/|\-)?")
                 .Replace(" ", @"(#|\-)?")
                 .Replace("_", @"(#|\_)?")
@@ -150,7 +154,6 @@ namespace RegexNutcracker.Services
         private static string ParseBracket(this string value)
         {
             value = value
-                .Replace("|", @"\|?")
                 .Replace(")", @"(#|\))?")
                 .Replace("(", @"#?(#|\()?")
                 .Replace("(#|\\()?#|\\))?", @"(#|\))?");
